@@ -1,0 +1,19 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/JiraUserQuestion/bin
+/JiraUserQuestion/obj/Debug
+/packages
+/.vs/JiraUserQuestion/v15/Server/sqlite3
+/.vs
+/build/Jira客户问题.exe
+/JiraUserQuestion/obj/Release
+/JiraUserQuestion.Business/obj
+/JiraUserQuestion.Business/bin
+/JiraUserQuestion.Api/obj
+/JiraUserQuestion.Api/bin
+/JiraTask/obj
+/JiraTask.Business/obj/Debug
+/JiraTask.Business/bin/Debug
+/JiraTask/bin

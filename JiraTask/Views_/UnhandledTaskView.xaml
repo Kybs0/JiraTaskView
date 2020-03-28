@@ -1,0 +1,161 @@
+﻿<UserControl x:Class="JiraTask.UnhandledTaskView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JiraTask"
+             xmlns:business="clr-namespace:JiraTask.Business;assembly=JiraTask.Business"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" x:Name="TheUserQuestionView">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+        <Style TargetType="GridViewColumnHeader">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"></Setter>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="Foreground" Value="{StaticResource Color.Text.Normal}"></Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Left"></Setter>
+            <Setter Property="Margin" Value="4 0 0 0"></Setter>
+        </Style>
+        <Style TargetType="ListView">
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListView">
+                        <Border Name="Border" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}">
+                            <ScrollViewer Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter TargetName="Border" Property="Background" Value="#FFAAAAAA"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="LightGray"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="Style.ListBox" TargetType="ListBox">
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <DataTemplate x:Key="DataTemplate.Jira" DataType="business:UserQuestionMode">
+            <Grid Margin="0 2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="36"/>
+                    <ColumnDefinition Width="480"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <Button Content="{Binding Path=JiraKey}" Style="{StaticResource Style.LinkedButton}" 
+                        Click="LinkedButton_OnClick" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="{Binding Path=TypeName}" ToolTip="{Binding Path=TypeName}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Column="2" Text="{Binding Path=Summary}" ToolTip="{Binding Path=Summary}" 
+                           Margin="0 0 6 0" VerticalAlignment="Center" TextTrimming="WordEllipsis"/>
+                <TextBlock Grid.Column="3" Text="{Binding Path=ModuleNames}"
+                           VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="4" Text="{Binding Path=CompleteDays,StringFormat={}{0}天}"
+                           VerticalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
+        <Style x:Key="Style.ListBoxItem.Jira" TargetType="ListBoxItem">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"></Setter>
+            <Setter Property="Height" Value="30"></Setter>
+            <Setter Property="Padding" Value="0"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Grid>
+                            <Grid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Name="CopyItem" Header="复制Jira" Click="CopyMenuItem_OnClick" Template="{StaticResource MenuItem.Copy}"/>
+                                </ContextMenu>
+                            </Grid.ContextMenu>
+                            <Border x:Name="RootBorder" BorderBrush="#EEEEEE" BorderThickness="0 0 0 1"/>
+                            <ContentPresenter/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="RootBorder" Property="Background" Value="#EFF5EC"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="RootBorder" Property="Background" Value="#FABCD9AD"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FAFAFA"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#EFF5EC"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="未完成任务" FontSize="20" Foreground="{StaticResource Color.Text.Normal}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding ElementName=UnHandledListBox,Path=Items.Count,StringFormat={}({0})}" FontSize="20" Foreground="{StaticResource Color.Text.Normal}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button x:Name="RefreshButton" Style="{StaticResource Style.RefreshButton}" Margin="4,0" Click="RefreshButton_OnClick"></Button>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="36"/>
+                <ColumnDefinition Width="480"/>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="60"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Jira编号" FontWeight="Bold" Margin="2 0 0 0" FontSize="14" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="1" Text="类型" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="2" Text="标题" FontWeight="Bold" Margin="2 0 0 0" FontSize="14" VerticalAlignment="Center"/>
+            <Grid Grid.Column="3" Margin="2 0 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="模块" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
+                <ComboBox x:Name="ModuleTypeComboBox" Grid.Column="1" HorizontalAlignment="Left"
+                          SelectedIndex="0" Style="{StaticResource Style.ComboBox}"
+                          Foreground="#666666" Background="Transparent" HorizontalContentAlignment="Stretch"
+                          Margin="2 2 0 2" Height="24" Tag="0" Width="24" 
+                          ItemsSource="{Binding ElementName=TheUserQuestionView,Path=ModuleTypes}" SelectionChanged="ModuleTypeComboBox_OnSelectionChanged"/>
+            </Grid>
+            <TextBlock Grid.Column="4" Text="滞留天数" FontWeight="Bold" Margin="2 0 0 0" FontSize="14" VerticalAlignment="Center"/>
+        </Grid>
+        <ListBox x:Name="UnHandledListBox" Grid.Row="2" ItemsSource="{Binding ElementName=TheUserQuestionView,Path=Issues,NotifyOnSourceUpdated=True}" 
+                 Style="{StaticResource Style.ListBox}" ItemContainerStyle="{StaticResource Style.ListBoxItem.Jira}"
+                 ItemTemplate="{StaticResource DataTemplate.Jira}"/>
+        <local:CircleLoading Grid.Row="2" IsActive="{Binding ElementName=TheUserQuestionView,Path=IsSearching}" 
+                             LoadingSize="Size32" Height="32" Width="32"
+                             Visibility="{Binding ElementName=TheUserQuestionView,Path=IsSearching,Converter={StaticResource BooleanToVisibilityConverter} }"/>
+    </Grid>
+</UserControl>
