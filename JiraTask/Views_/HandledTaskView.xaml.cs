@@ -216,7 +216,7 @@ namespace JiraTask
 
         public List<DuePeriodType> DueWeekTypeList { get; set; } = new List<DuePeriodType>()
         {
-            DuePeriodType.今日,DuePeriodType.昨日,DuePeriodType.本周,DuePeriodType.上周,DuePeriodType.上上周,DuePeriodType.上上上周,DuePeriodType.本月,DuePeriodType.上月,DuePeriodType.今年,DuePeriodType.去年,
+            DuePeriodType.今日,DuePeriodType.昨日,DuePeriodType.本周,DuePeriodType.上周,DuePeriodType.上上周,DuePeriodType.本月,DuePeriodType.上月,DuePeriodType.自定义,
         };
 
         public static readonly DependencyProperty SelectedPeriodTypeProperty = DependencyProperty.Register(
@@ -227,7 +227,15 @@ namespace JiraTask
         {
             if (d is HandledTaskView userHandledQuestionView && e.NewValue is DuePeriodType selectedWeekType)
             {
-                userHandledQuestionView.RequestJiraByDuePeriodType(selectedWeekType);
+                if (selectedWeekType==DuePeriodType.自定义)
+                {
+                    userHandledQuestionView.UserDefinedDateRangePanel.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    userHandledQuestionView.UserDefinedDateRangePanel.Visibility = Visibility.Collapsed;
+                    userHandledQuestionView.RequestJiraByDuePeriodType(selectedWeekType);
+                }
             }
         }
 

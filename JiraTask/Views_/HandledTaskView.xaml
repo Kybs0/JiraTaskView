@@ -7,13 +7,13 @@
              xmlns:models="clr-namespace:JiraTask.Models"
              xmlns:business="clr-namespace:JiraTask.Business;assembly=JiraTask.Business"
              mc:Ignorable="d" 
-             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              d:DesignHeight="450" d:DesignWidth="800" x:Name="TheHandledQuestionView">
     <UserControl.Resources>
 
         <Style TargetType="{x:Type Button}" 
                        BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Normal" />
+            <Setter Property="controls:ControlsHelper.ContentCharacterCasing" Value="Normal" />
         </Style>
 
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -146,8 +146,7 @@
             <Button x:Name="RefreshButton" Style="{StaticResource Style.RefreshButton}" Margin="4,0" Click="RefreshButton_OnClick"></Button>
         </StackPanel>
 
-        <StackPanel Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top">
-
+        <StackPanel Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center">
             <ComboBox x:Name="DueWeekTypeComboBox"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 2 10 0"
                       Foreground="#666666" Background="#F4F4F4" HorizontalContentAlignment="Stretch"
                       MinWidth="80" Visibility="Visible" 
@@ -155,30 +154,25 @@
                       SelectedValue="{Binding ElementName=TheHandledQuestionView,Path=SelectedPeriodType}" 
                       ItemsSource="{Binding ElementName=TheHandledQuestionView,Path=DueWeekTypeList}"/>
 
-            <StackPanel Orientation="Horizontal" Margin="0 5 10 0">
-
-                <DatePicker Width="140"
+            <StackPanel x:Name="UserDefinedDateRangePanel" Orientation="Horizontal" Margin="0 5 10 0" Visibility="Collapsed">
+                <DatePicker Width="100"
                             x:Name="StartDatePicker"
                             Margin="0 0 0 0"
                             HorizontalAlignment="Center"
-                            HorizontalContentAlignment="Stretch"
-                            Controls:TextBoxHelper.UseFloatingWatermark="True"
-                            Controls:TextBoxHelper.Watermark="Select a date"
-                            Controls:TextBoxHelper.WatermarkAlignment="Right" />
-
+                            VerticalContentAlignment="Center"
+                            HorizontalContentAlignment="Center"
+                            controls:TextBoxHelper.Watermark="Select a date"
+                            controls:TextBoxHelper.WatermarkAlignment="Center" />
                 <TextBlock VerticalAlignment="Center" Margin="2 0 2 0">-</TextBlock>
-
-                <DatePicker Width="140"
+                <DatePicker Width="100"
                             x:Name="EndDatePicker"
                             Margin="0 0 0 0"
                             HorizontalAlignment="Center"
-                            HorizontalContentAlignment="Stretch"
-                            Controls:TextBoxHelper.UseFloatingWatermark="True"
-                            Controls:TextBoxHelper.Watermark="Select a date"
-                            Controls:TextBoxHelper.WatermarkAlignment="Right" />
-
-                <Button Height="40" Width="80" Margin="5 0 0 0" x:Name="DatePickerButton" VerticalAlignment="Bottom" Click="DatePickerButton_OnClick">指定日期</Button>
-
+                            VerticalContentAlignment="Center"
+                            HorizontalContentAlignment="Center"
+                            controls:TextBoxHelper.Watermark="Select a date"
+                            controls:TextBoxHelper.WatermarkAlignment="Center" />
+                <Button Height="26" Width="40" Margin="5 0 0 0" x:Name="DatePickerButton" VerticalAlignment="Bottom" Click="DatePickerButton_OnClick">确定</Button>
             </StackPanel>
 
         </StackPanel>
