@@ -40,21 +40,22 @@ namespace JiraTask
 
         private async void RequestJiraByDuePeriodType(DuePeriodType selectedPeriodType)
         {
-            var issues = await GetSolvedIssuesByCurrentAuthor(selectedPeriodType);
-            RequestJiraData(issues);
+            var issuesTask = GetSolvedIssuesByCurrentAuthor(selectedPeriodType);
+            await RequestJiraData(issuesTask);
         }
 
         private async void RequestJiraByDatePeriod(DateTime startDate, DateTime endDate)
         {
-            var issues = await GetSolvedIssuesByCurrentAuthor(startDate,endDate);
-            RequestJiraData(issues);
+            var issuesTask = GetSolvedIssuesByCurrentAuthor(startDate, endDate);
+            await RequestJiraData(issuesTask);
         }
 
-        private async void RequestJiraData(List<(DateTime userUpdatedTime, Issue issue)> issues)
+        private async Task RequestJiraData(Task<List<(DateTime userUpdatedTime, Issue issue)>> issuesTask)
         {
             IsSearching = true;
             Issues = null;
 
+            var issues = await issuesTask;
             var userQuestionModes = new List<UserQuestionMode>();
             foreach (var issueData in issues)
             {
@@ -227,7 +228,7 @@ namespace JiraTask
         {
             if (d is HandledTaskView userHandledQuestionView && e.NewValue is DuePeriodType selectedWeekType)
             {
-                if (selectedWeekType==DuePeriodType.自定义)
+                if (selectedWeekType == DuePeriodType.自定义)
                 {
                     userHandledQuestionView.UserDefinedDateRangePanel.Visibility = Visibility.Visible;
                 }
