@@ -82,6 +82,22 @@ namespace JiraTask.Business
             var issues = await JiraConnectionHelper.RequestAsync(JiraCvteCom, requestText);
             return issues;
         }
+
+        public async Task<List<Issue>> GetHandledIssuesAfterTimeAsync(DateTime startDate,DateTime endDate, List<string> solvedStatusList)
+        {
+            // updatedDate >= "2020-01-01 12:57" AND updatedDate <= "2020-03-28 12:57"
+            var timeFilter = $"updatedDate >= \"{startDate.Year}-{startDate.Month}-{startDate.Day} 00:00\" AND updatedDate <= \"{endDate.Year}-{endDate.Month}-{endDate.Day} 23:59\"";
+
+            var requestText = $"project = {CustomUtils.ProjectName} AND Assignee = {CustomUtils.Account} AND status in ({string.Join(",", solvedStatusList)})";
+            if (!string.IsNullOrEmpty(timeFilter))
+            {
+                requestText = $"{requestText} AND {timeFilter}";
+            }
+            requestText = $"{requestText} ORDER BY Rank ASC";
+            var issues = await JiraConnectionHelper.RequestAsync(JiraCvteCom, requestText);
+            return issues;
+        }
+
     }
 
     public enum DuePeriodType

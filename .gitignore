@@ -17,3 +17,6 @@
 /JiraTask.Business/obj/Debug
 /JiraTask.Business/bin/Debug
 /JiraTask/bin
+[Bb]in/
+[Dd]ebug/
+[Rr]elease/

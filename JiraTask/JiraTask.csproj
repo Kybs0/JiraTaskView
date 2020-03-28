@@ -80,6 +80,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0531" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
