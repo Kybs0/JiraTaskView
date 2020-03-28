@@ -13,5 +13,5 @@
 ![avatar](/Readme/3.png)
 
 # 下载安装
-[点击下载](/build/JiraTask.exe)
+[点击下载](https://github.com/Kybs0/JiraTaskView/raw/master/build/JiraTask.exe)
 安装时可选择在桌面/启动菜单中添加快捷方式<br>
