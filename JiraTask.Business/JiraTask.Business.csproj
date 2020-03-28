@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Aspose.Cells">
-      <HintPath>..\packages\Aspose.Cells.dll\Aspose.Cells.dll</HintPath>
-    </Reference>
     <Reference Include="Atlassian.Jira.Signed, Version=10.6.0.0, Culture=neutral, PublicKeyToken=e89455146be57265, processorArchitecture=MSIL">
       <HintPath>..\packages\Atlassian.SDK.Signed.10.6.0\lib\net452\Atlassian.Jira.Signed.dll</HintPath>
     </Reference>
@@ -72,7 +69,6 @@
     <Compile Include="CustomUtils.cs" />
     <Compile Include="DateTimeDiffHelper.cs" />
     <Compile Include="DueTimeTrackingHelper.cs" />
-    <Compile Include="ExcelHelper.cs" />
     <Compile Include="JiraHelper.cs" />
     <Compile Include="JiraSortingStatus.cs" />
     <Compile Include="Jira\JiraConnectionHelper.cs" />
