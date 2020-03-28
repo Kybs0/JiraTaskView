@@ -38,8 +38,14 @@
     <Reference Include="Atlassian.Jira.Signed, Version=10.6.0.0, Culture=neutral, PublicKeyToken=e89455146be57265, processorArchitecture=MSIL">
       <HintPath>..\packages\Atlassian.SDK.Signed.10.6.0\lib\net452\Atlassian.Jira.Signed.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.2.0.246, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.2.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Kybs0.Net.Utils, Version=1.1.22.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kybs0.Net.Utils.1.1.22\lib\net45\Kybs0.Net.Utils.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="RestSharp, Version=100.0.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
@@ -47,6 +53,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -63,7 +73,6 @@
     <Compile Include="DateTimeDiffHelper.cs" />
     <Compile Include="DueTimeTrackingHelper.cs" />
     <Compile Include="ExcelHelper.cs" />
-    <Compile Include="IniFileHelper.cs" />
     <Compile Include="JiraHelper.cs" />
     <Compile Include="JiraSortingStatus.cs" />
     <Compile Include="Jira\JiraConnectionHelper.cs" />
@@ -72,7 +81,6 @@
     <Compile Include="TimeTransferHelper.cs" />
     <Compile Include="UserQuestionMode.cs" />
     <Compile Include="UserSettingConfigHelper.cs" />
-    <Compile Include="WebRequestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
