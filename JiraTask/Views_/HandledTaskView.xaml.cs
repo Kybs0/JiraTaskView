@@ -37,12 +37,24 @@ namespace JiraTask
             InitializeComponent();
             SelectedPeriodType = DuePeriodType.昨日;
         }
-        private async void RequestJiraData(DuePeriodType selectedPeriodType)
+
+        private async void RequestJiraByDuePeriodType(DuePeriodType selectedPeriodType)
+        {
+            var issues = await GetSolvedIssuesByCurrentAuthor(selectedPeriodType);
+            RequestJiraData(issues);
+        }
+
+        private async void RequestJiraByDatePeriod(DateTime startDate, DateTime endDate)
+        {
+            var issues = await GetSolvedIssuesByCurrentAuthor(startDate,endDate);
+            RequestJiraData(issues);
+        }
+
+        private async void RequestJiraData(List<(DateTime userUpdatedTime, Issue issue)> issues)
         {
             IsSearching = true;
             Issues = null;
 
-            var issues = await GetSolvedIssuesByCurrentAuthor(selectedPeriodType);
             var userQuestionModes = new List<UserQuestionMode>();
             foreach (var issueData in issues)
             {
@@ -90,6 +102,43 @@ namespace JiraTask
         /// 获取当前用户解决的问题列表
         /// 解决:"验收", "测试中", "无法处理", "完成", "已解决"（暂时泛型，之后可以考虑以单个类型的状态来确定解决状态）
         /// </summary>
+        /// <returns></returns>
+        private async Task<List<(DateTime userUpdatedTime, Issue issue)>> GetSolvedIssuesByCurrentAuthor(DateTime startDate, DateTime endDate)
+        {
+            var resultList = new List<(DateTime userUpdatedTime, Issue issue)>();
+            var solvedStatusList = new List<string>() { "验收", "测试中", "无法处理", "完成", "已解决" };
+            //获取对应时间范围开始后的“完成”问题列表
+            //为何通过时间范围起始之后来获取问题？因为用户变更为“完成”状态，问题真正关闭的时间在这之后。
+            var issues = await new JiraRequestService().GetHandledIssuesAfterTimeAsync(startDate, endDate, solvedStatusList);
+            foreach (var issue in issues)
+            {
+                //通过修改日志，查找当前作者的Transition。
+                var changeLogs = await issue.GetChangeLogsAsync();
+                //获取当前作者,在时间段范围内，是否有主动变更状态为角色对应完成状态的日志
+                var currentUserStatusLogs = changeLogs.ToList().Where(i => i.Author.Username == CustomUtils.Account
+                                                                           //&& DueTimeTrackingHelper.IsInDuePeriodRange(i.CreatedDate, selectedPeriodType)
+                                                                           && i.Items.Any(item => item.FieldName == "status" && solvedStatusList.Contains(item.ToValue))).ToList();
+                currentUserStatusLogs = currentUserStatusLogs
+                    .Where(i => i.CreatedDate >= startDate && i.CreatedDate <= endDate).ToList();
+
+                //如果此段时间范围内作者变更为完成状态，那么当前处于“完成”状态的问题，是作者完成的。
+                if (currentUserStatusLogs.Count > 0)
+                {
+                    var lastStatusLog = currentUserStatusLogs.OrderBy(i => i.CreatedDate).Last();
+                    resultList.Add((lastStatusLog.CreatedDate, issue));
+                }
+            }
+
+            var orderedResultList = resultList.OrderBy(i => i.userUpdatedTime).ToList();
+            return orderedResultList;
+        }
+
+
+
+        /// <summary>
+        /// 获取当前用户解决的问题列表
+        /// 解决:"验收", "测试中", "无法处理", "完成", "已解决"（暂时泛型，之后可以考虑以单个类型的状态来确定解决状态）
+        /// </summary>
         /// <param name="selectedPeriodType"></param>
         /// <returns></returns>
         private async Task<List<(DateTime userUpdatedTime, Issue issue)>> GetSolvedIssuesByCurrentAuthor(DuePeriodType selectedPeriodType)
@@ -121,6 +170,9 @@ namespace JiraTask
             return orderedResultList;
         }
 
+
+
+
         private List<string> _completedStatusList = new List<string>() { "无法处理", "完成", "已解决" };
         private bool IsIssueCompleted(IssueStatus argStatus)
         {
@@ -140,8 +192,9 @@ namespace JiraTask
 
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
-            RequestJiraData(SelectedPeriodType);
+            RequestJiraByDuePeriodType(SelectedPeriodType);
         }
+
         private void ModuleTypeComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selectedItem = ModuleTypeComboBox.SelectedItem.ToString();
@@ -174,7 +227,7 @@ namespace JiraTask
         {
             if (d is HandledTaskView userHandledQuestionView && e.NewValue is DuePeriodType selectedWeekType)
             {
-                userHandledQuestionView.RequestJiraData(selectedWeekType);
+                userHandledQuestionView.RequestJiraByDuePeriodType(selectedWeekType);
             }
         }
 
@@ -247,5 +300,15 @@ namespace JiraTask
         }
 
         #endregion
+
+        private void DatePickerButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (StartDatePicker.SelectedDate == null || EndDatePicker.SelectedDate == null)
+            {
+                return;
+            }
+
+            RequestJiraByDatePeriod(StartDatePicker.SelectedDate.Value, EndDatePicker.SelectedDate.Value);
+        }
     }
 }
